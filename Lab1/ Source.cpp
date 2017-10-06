@@ -23,7 +23,7 @@ int main()
 	doubleResult.mantissa = binaryNotation(&a, 52);
 	std::cout << doubleResult.sign << " " << doubleResult.precision << " " << doubleResult.mantissa << std::endl;
 
-	unsigned int b = 36; //Размер в байтах зависит от системы
+	unsigned int b = 36; //ГђГ Г§Г¬ГҐГ° Гў ГЎГ Г©ГІГ Гµ Г§Г ГўГЁГ±ГЁГІ Г®ГІ Г±ГЁГ±ГІГҐГ¬Г»
 	std::cout << binaryNotation(&b, sizeof(typeid(b).name())*8) << std::endl;
 
 	system("pause");
@@ -32,21 +32,21 @@ int main()
 
 
 template<class T> std::string binaryNotation(T* object, int countOfBytes) {
-	int intPath = abs((int)*object); //Отсечение дробной части (если имеется)
+	int intPath = abs((int)*object); //ГЋГІГ±ГҐГ·ГҐГ­ГЁГҐ Г¤Г°Г®ГЎГ­Г®Г© Г·Г Г±ГІГЁ (ГҐГ±Г«ГЁ ГЁГ¬ГҐГҐГІГ±Гї)
 	std::string result;
 	char tmpChar[2];
-	while (intPath) { //Перевод целой части в двоичную с.с.
-		sprintf(tmpChar, "%d", intPath % 2); //Можно обобщить на любую с.с., если остаток от деления однозначное число
+	while (intPath) { //ГЏГҐГ°ГҐГўГ®Г¤ Г¶ГҐГ«Г®Г© Г·Г Г±ГІГЁ Гў Г¤ГўГ®ГЁГ·Г­ГіГѕ Г±.Г±.
+		sprintf(tmpChar, "%d", intPath % 2); //ГЊГ®Г¦Г­Г® Г®ГЎГ®ГЎГ№ГЁГІГј Г­Г  Г«ГѕГЎГіГѕ Г±.Г±., ГҐГ±Г«ГЁ Г®Г±ГІГ ГІГ®ГЄ Г®ГІ Г¤ГҐГ«ГҐГ­ГЁГї Г®Г¤Г­Г®Г§Г­Г Г·Г­Г®ГҐ Г·ГЁГ±Г«Г®
 		result += tmpChar[0]; 
 		intPath /= 2;
 	}
-	std::reverse(result.begin(), result.end()); //Обратная запись
+	std::reverse(result.begin(), result.end()); //ГЋГЎГ°Г ГІГ­Г Гї Г§Г ГЇГЁГ±Гј
 
-	unsigned short expMantissa = (unsigned short) result.size() - 1; //Определение изменения порядка при нормализации мантиссы
+	unsigned short expMantissa = (unsigned short) result.size() - 1; //ГЋГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї ГЇГ®Г°ГїГ¤ГЄГ  ГЇГ°ГЁ Г­Г®Г°Г¬Г Г«ГЁГ§Г Г¶ГЁГЁ Г¬Г Г­ГІГЁГ±Г±Г»
 	std::string fracResult;
-	if (typeid(T) == typeid(double) || typeid(T) == typeid(long double) || typeid(T) == typeid(float)) {  // Проверка условия на возможное наличие дробной части ... Или лучше использовать typeid(T).name()?
+	if (typeid(T) == typeid(double) || typeid(T) == typeid(long double) || typeid(T) == typeid(float)) {  // ГЏГ°Г®ГўГҐГ°ГЄГ  ГіГ±Г«Г®ГўГЁГї Г­Г  ГўГ®Г§Г¬Г®Г¦Г­Г®ГҐ Г­Г Г«ГЁГ·ГЁГҐ Г¤Г°Г®ГЎГ­Г®Г© Г·Г Г±ГІГЁ ... Г€Г«ГЁ Г«ГіГ·ГёГҐ ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ ГІГј typeid(T).name()?
 		T fracPath = fabs(*object - (int) *object);
-		unsigned short countOfNumbers = 10; //На случай, если будет бесконечная дробь
+		unsigned short countOfNumbers = 10; //ГЌГ  Г±Г«ГіГ·Г Г©, ГҐГ±Г«ГЁ ГЎГіГ¤ГҐГІ ГЎГҐГ±ГЄГ®Г­ГҐГ·Г­Г Гї Г¤Г°Г®ГЎГј
 		while (fracPath && countOfNumbers) {
 			fracPath *= 2;
 			sprintf(tmpChar, "%d", (int)fracPath);
@@ -56,7 +56,7 @@ template<class T> std::string binaryNotation(T* object, int countOfBytes) {
 		}
 		result += fracResult;
 		expMantissa += 1023;
-		doubleResult.precision = binaryNotation(&expMantissa, 11); //Определенно пока только для double. По идее можно обобщить
+		doubleResult.precision = binaryNotation(&expMantissa, 11); //ГЋГЇГ°ГҐГ¤ГҐГ«ГҐГ­Г­Г® ГЇГ®ГЄГ  ГІГ®Г«ГјГЄГ® Г¤Г«Гї double. ГЏГ® ГЁГ¤ГҐГҐ Г¬Г®Г¦Г­Г® Г®ГЎГ®ГЎГ№ГЁГІГј
 	}	
 	result += std::string(countOfBytes - result.size(), '0');
 	return result;
