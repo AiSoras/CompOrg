@@ -45,8 +45,8 @@ template<class T> std::string binaryNotation(T* object, int countOfBytes) {
 	unsigned short expMantissa = (unsigned short) result.size() - 1; //Определение изменения порядка при нормализации мантиссы
 	std::string fracResult;
 	if (typeid(T) == typeid(double) || typeid(T) == typeid(long double) || typeid(T) == typeid(float)) {  // Проверка условия на возможное наличие дробной части ... Или лучше использовать typeid(T).name()?
-		T fracPath = fabs(*object - (int) *object);
-		unsigned short countOfNumbers = 10; //На случай, если будет бесконечная дробь
+		T fracPath = (T) fabs(*object - (int) *object);
+		unsigned short countOfNumbers = countOfBytes - (unsigned short) result.size(); //На случай, если будет бесконечная дробь
 		while (fracPath && countOfNumbers) {
 			fracPath *= 2;
 			sprintf(tmpChar, "%d", (int)fracPath);
