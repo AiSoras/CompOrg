@@ -88,7 +88,7 @@ void menu() {
 			std::cin >> tmp;
 			if (tmp) {
 				result = replaceBytes(result);
-				uint = std::stoul(result, 0, 2); //В 64-битной long и unsigned int эквивалентны
+				uint = std::stoul(result, 0, 2); //В большинстве компиляторов unsigned long и unsigned int эквивалентны по байтам
 				std::cout << uint << std::endl;
 			}
 			std::cout << "Repeat? Y(1)/N(0)\n";
