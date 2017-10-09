@@ -10,13 +10,22 @@ COORD m = { 0, 0 };
 COORD c = { 0, 1 };
 HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 
-struct doubleStructure{
-public:
-	bool sign;
-	std::string mantissa;
-	std::string precision;
+union doubleStructure{
+	double number;
+	unsigned long long binary;
+	//__int8 binary[sizeof(double)];
 };
 static doubleStructure doubleResult;
+
+
+//union doubleStructure{
+//	double number;
+//	struct {
+//		unsigned int sign : 1;
+//		unsigned int exponent : 11;
+//		unsigned long long mantissa : 52;
+//	} parts;
+//} doubleNumber;
 
 
 template<class T> std::string binaryNotation(T* object, int countOfBytes);
@@ -29,22 +38,28 @@ int Point();
 
 int main()
 {
+//	doubleNumber.number = 15.375;
+//	std::cout << doubleNumber.parts.sign << " " << doubleNumber.parts.exponent << " " << doubleNumber.parts.mantissa << std::endl;
+//	system("pause");
 	menu();
 	return 0;
 }
 
 
-template<class T> std::string binaryNotation(T* object, int countOfBytes) { //Работает норм пока для целых. Скоро залью версию для плавающей запятой
+template<class T> std::string binaryNotation(T* object, int countOfBytes) {
 	std::string result;
 	bool mask = 1;
 	char tmpChar[2];
+	unsigned long long obj = (unsigned long long)*object; //unsigned long long = unsigned __int64 - 8 бай
 	for (int i = 0; i < countOfBytes; i++) {
-		sprintf(tmpChar, "%d", mask & (unsigned long long)*object>>i); //unsigned long long = unsigned __int64 - 8 байт
+		sprintf(tmpChar, "%d", mask & obj); 
+		obj >>= 1;
 		result += tmpChar[0];
 	}
 	std::reverse(result.begin(), result.end());
 	return result;
 }
+
 
 void menu() {
 	int menuPoint;
@@ -58,13 +73,14 @@ void menu() {
 	while (1) {
 		system("cls");
 		bool tmp;
+		std::string result;
 		switch (menuPoint)
 		{
 		case 1:
 			unsigned int uint;
 			std::cout << "Unsigned int\n>>>";
 			std::cin >> uint;
-			std::cout << binaryNotation(&uint, sizeof(typeid(uint).name()) * 8);
+			std::cout << binaryNotation(&uint, sizeof(unsigned int) * 8);
 			std::cout << "\nRepeat? Y(1)/N(0)\n";
 			std::cin >> tmp;
 			if (!tmp) {
@@ -72,10 +88,9 @@ void menu() {
 			}
 			break;
 		case 2:
-			double dbl;
 			std::cout << "Double\n>>>";
-			std::cin >> dbl;
-			std::cout << binaryNotation(&dbl, sizeof(typeid(dbl).name()) * 8);
+			std::cin >> doubleResult.number;
+			std::cout << binaryNotation(&doubleResult.binary,sizeof(unsigned long long) * 8);
 			std::cout << "\nRepeat? Y(1)/N(0)\n";
 			std::cin >> tmp;
 			if (!tmp) {
