@@ -31,6 +31,8 @@ static doubleStructure doubleResult;
 template<class T> std::string binaryNotation(T* object, int countOfBytes);
 //template<class T> bool signDefine(T* object, int countOfBytes);
 
+std::string replaceBytes(std::string result);
+
 void menu();
 //void keyPressed();
 int Point();
@@ -41,6 +43,7 @@ int main()
 //	doubleNumber.number = 15.375;
 //	std::cout << doubleNumber.parts.sign << " " << doubleNumber.parts.exponent << " " << doubleNumber.parts.mantissa << std::endl;
 //	system("pause");
+
 	menu();
 	return 0;
 }
@@ -49,12 +52,10 @@ int main()
 template<class T> std::string binaryNotation(T* object, int countOfBytes) {
 	std::string result;
 	bool mask = 1;
-	char tmpChar[2];
 	unsigned long long obj = (unsigned long long)*object; //unsigned long long = unsigned __int64 - 8 бай
 	for (int i = 0; i < countOfBytes; i++) {
-		sprintf(tmpChar, "%d", mask & obj); 
+		result += std::to_string(mask & obj);
 		obj >>= 1;
-		result += tmpChar[0];
 	}
 	std::reverse(result.begin(), result.end());
 	return result;
@@ -80,8 +81,17 @@ void menu() {
 			unsigned int uint;
 			std::cout << "Unsigned int\n>>>";
 			std::cin >> uint;
-			std::cout << binaryNotation(&uint, sizeof(unsigned int) * 8);
-			std::cout << "\nRepeat? Y(1)/N(0)\n";
+			result = binaryNotation(&uint, sizeof(unsigned int) * 8);
+			std::cout << result;
+			//std::cin.clear();
+			std::cout << "\n\nChange bytes? Y(1)/N(0)\n";
+			std::cin >> tmp;
+			if (tmp) {
+				result = replaceBytes(result);
+				uint = std::stoul(result, 0, 2); //В 64-битной long и unsigned int эквивалентны
+				std::cout << uint << std::endl;
+			}
+			std::cout << "Repeat? Y(1)/N(0)\n";
 			std::cin >> tmp;
 			if (!tmp) {
 				menu();
@@ -90,8 +100,17 @@ void menu() {
 		case 2:
 			std::cout << "Double\n>>>";
 			std::cin >> doubleResult.number;
-			std::cout << binaryNotation(&doubleResult.binary,sizeof(unsigned long long) * 8);
-			std::cout << "\nRepeat? Y(1)/N(0)\n";
+			result = binaryNotation(&doubleResult.binary, sizeof(unsigned long long) * 8);
+			std::cout << result;
+			//std::cin.clear();
+			std::cout << "\n\nChange bytes? Y(1)/N(0)\n";
+			std::cin >> tmp;
+			if (tmp) {
+				result = replaceBytes(result);
+				doubleResult.binary = std::stoull(result, 0, 2);
+				std::cout << doubleResult.number << std::endl;
+			}
+			std::cout << "Repeat? Y(1)/N(0)\n";
 			std::cin >> tmp;
 			if (!tmp) {
 				menu();
@@ -99,6 +118,26 @@ void menu() {
 			break;
 		}
 	}
+}
+
+
+std::string replaceBytes(std::string result) {
+
+	std::string replacementBytes;
+	short byteNumer;
+
+	std::cout << "Byte No\n";
+	std::cin >> byteNumer;
+	std::cout << "Bytes \n";
+	std::cin >> replacementBytes;
+
+	std::reverse(result.begin(), result.end()); //В обратном порядке
+	result.replace(byteNumer, replacementBytes.size(), replacementBytes);
+	std::reverse(result.begin(), result.end());
+
+	std::cout << "Result:\n" << result << std::endl;
+
+	return result;
 }
 
 
