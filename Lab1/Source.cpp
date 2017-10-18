@@ -13,37 +13,22 @@ HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 union doubleStructure{
 	double number;
 	unsigned long long binary;
-	//__int8 binary[sizeof(double)];
 };
 static doubleStructure doubleResult;
 
 
-//union doubleStructure{
-//	double number;
-//	struct {
-//		unsigned int sign : 1;
-//		unsigned int exponent : 11;
-//		unsigned long long mantissa : 52;
-//	} parts;
-//} doubleNumber;
-
-
 template<class T> std::string binaryNotation(T* object, int countOfBytes);
-//template<class T> bool signDefine(T* object, int countOfBytes);
+template<class T> void fromBinaryToInt( T* object, std::string bytes);
+
 
 std::string replaceBytes(std::string result);
 
 void menu();
-//void keyPressed();
 int Point();
 
 
 int main()
 {
-//	doubleNumber.number = 15.375;
-//	std::cout << doubleNumber.parts.sign << " " << doubleNumber.parts.exponent << " " << doubleNumber.parts.mantissa << std::endl;
-//	system("pause");
-
 	menu();
 	return 0;
 }
@@ -59,6 +44,16 @@ template<class T> std::string binaryNotation(T* object, int countOfBytes) {
 	}
 	std::reverse(result.begin(), result.end());
 	return result;
+}
+
+
+template<class T> void fromBinaryToInt(T* object, std::string bytes) { //Перевод из строки в число
+	for (int i = 0; i < (sizeof(T) * 8); i++) {
+		*object <<= 1;
+		if (bytes[i] == '1') {
+			*object += 1;
+		}
+	}
 }
 
 
@@ -108,6 +103,7 @@ void menu() {
 			if (tmp) {
 				result = replaceBytes(result);
 				doubleResult.binary = std::stoull(result, 0, 2);
+				//fromBinaryToInt(&doubleResult.binary, result);
 				std::cout << doubleResult.number << std::endl;
 			}
 			std::cout << "Repeat? Y(1)/N(0)\n";
@@ -200,50 +196,3 @@ int Point()
 		std::cout << point;
 	}
 };
-
-
-//void keyPressed() {
-//	int key = _getch();
-//	if (key == 0 || key == 224)
-//		key = _getch();
-//	if (key == 27)
-//		exit(1);
-//}
-
-
-//template<class T> bool signDefine(T* object, int countOfBytes) {
-//	bool mask = 1;
-//	return mask & (__int64) *object>>(countOfBytes-1);
-//}
-
-
-//template<class T> std::string binaryNotation(T* object, int countOfBytes) {
-//	int intPath = abs((int)*object); //Отсечение дробной части (если имеется)
-//	std::string result;
-//	char tmpChar[2];
-//	while (intPath) { //Перевод целой части в двоичную с.с.
-//		sprintf(tmpChar, "%d", intPath % 2); //Можно обобщить на любую с.с., если остаток от деления однозначное число
-//		result += tmpChar[0]; 
-//		intPath /= 2;
-//	}
-//	std::reverse(result.begin(), result.end()); //Обратная запись
-//
-//	unsigned short expMantissa = (unsigned short) result.size() - 1; //Определение изменения порядка при нормализации мантиссы
-//	std::string fracResult;
-//	if (typeid(T) == typeid(double) || typeid(T) == typeid(long double) || typeid(T) == typeid(float)) {  // Проверка условия на возможное наличие дробной части ... Или лучше использовать typeid(T).name()?
-//		T fracPath = (T) fabs(*object - (int) *object);
-//		unsigned short countOfNumbers = countOfBytes - (unsigned short) result.size(); //На случай, если будет бесконечная дробь
-//		while (fracPath && countOfNumbers) {
-//			fracPath *= 2;
-//			sprintf(tmpChar, "%d", (int)fracPath);
-//			fracResult += tmpChar[0];
-//			fracPath -= (int)fracPath;
-//			countOfNumbers--;
-//		}
-//		result += fracResult;
-//		expMantissa += 1023;
-//		doubleResult.precision = binaryNotation(&expMantissa, 11); //Определенно пока только для double. По идее можно обобщить
-//	}	
-//	result += std::string(countOfBytes - result.size(), '0');
-//	return result;
-//}
