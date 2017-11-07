@@ -1,11 +1,9 @@
 import matplotlib.pyplot as plt
-import math
+from math import pi, sqrt, cos
 from tkinter import *
 
-pi = 3.1415
-
-x = [(i*pi/2)/100 for i in range(300,3700)]
-y = [math.cos(i/2)**2+math.sqrt(i) for i in x]
+x = [(i * pi / 2) / 100 for i in range(300, 3700)]
+y = [cos(i / 2) ** 2 + sqrt(i) for i in x]
 
 window = Tk()
 
@@ -17,6 +15,6 @@ window.geometry("500x500")
 
 mainloop()
 
-plt.plot(x,y)
+plt.plot(x, y)
 plt.ylabel('cos^2(x/2)+sqrt(x)')
 plt.show()
